@@ -4,28 +4,14 @@ services:
     build: ./async-clientapp
     container_name: clientapp
     networks:
-      - my_net
+      - private_network
     depends_on:
-      - sender-pull
+      - serverapp
   serverapp:
     build: ./async-serverapp
     container_name: serverapp
     networks:
-      - my_net
-  sender-pull:
-    build: ./async-sender-pull
-    container_name: sender-pull
-    networks:
-      - my_net
-    depends_on:
-      - receiver-pull
-  receiver-pull:
-    build: ./async-receiver-pull
-    container_name: receiver-pull
-    networks:
-      - my_net
-    depends_on:
-      - serverapp
+      - private_network
 networks:
-  my_net:
+  private_network:
     driver: bridge
