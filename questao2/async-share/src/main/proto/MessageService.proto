@@ -19,9 +19,13 @@ message MessageResult {
 }
 
 service SenderService {
-    rpc sendMessage(Message) returns (MessageResult);
+    rpc sendMessage (Message) returns (MessageResult);
 }
 
 service ReceiverService {
-    rpc delivery(Message) returns (MessageResult);
+    rpc delivery (Message) returns (MessageResult);
+}
+
+service ServerService {
+    rpc print (Message) returns (MessageResult);
 }
