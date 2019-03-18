@@ -1,18 +1,24 @@
 package ifpb;
 
-import java.rmi.AlreadyBoundException;
-import java.rmi.RemoteException;
-import java.rmi.registry.LocateRegistry;
-import java.rmi.registry.Registry;
+import io.grpc.Server;
+import io.grpc.ServerBuilder;
+
+import java.io.IOException;
 
 public class Main {
 
-	public static void main(String[] args) throws RemoteException, AlreadyBoundException {
-		//
-		System.out.println("Servidor inicializado");
-		//
-		Registry registry = LocateRegistry.createRegistry(10992);
-		registry.bind("ServerApp", new ServerApp());		
-	}
-	
+    public static void main(String[] args) throws IOException, InterruptedException {
+
+        System.out.println("Servidor inicializado");
+
+
+        Server server = ServerBuilder
+                .forPort(10992)
+                .addService(new ServerAppService())
+                .build();
+
+        server.start();
+        server.awaitTermination();
+    }
+
 }
