@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 cd async-share
-mvn clean install
+mvn clean compile install
 cd ..
 
 cd async-clientapp
