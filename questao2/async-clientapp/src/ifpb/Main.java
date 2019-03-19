@@ -16,6 +16,7 @@ import java.util.concurrent.Executors;
 public class Main {
 
 	private static Executor executor = Executors.newFixedThreadPool(10);
+	private static Integer countThread = 0;
 
 	private static void sendAndResultMessage(String id, String text, SenderServiceGrpc.SenderServiceFutureStub stub) {
 
@@ -31,6 +32,7 @@ public class Main {
 				MessageResult messageResult = futureResonse.get();
 
 				System.out.println("Recebido resultado para mensagem " + id + ": " + messageResult.getHash());
+				countThread--;
 			} catch (Exception ex) {
 				ex.printStackTrace();
 			}
@@ -38,12 +40,12 @@ public class Main {
 
 	}
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws InterruptedException {
 
 		System.out.println("Acionado o clientapp");
 
 		ManagedChannel channel = ManagedChannelBuilder
-				.forAddress("localhost", 10990)
+				.forAddress("clientapp", 10990)
 				.usePlaintext()
 				.build();
 
@@ -58,9 +60,17 @@ public class Main {
 			final String mx = text + "#" + i;
 
 			Thread t = new Thread(() -> sendAndResultMessage(ix, mx, stub));
+			countThread++;
 			t.start();
 		}
-		
+
+		while (countThread != 0) {
+			Thread.sleep(2000);
+			System.out.println("Esperando processor todas as mensagens (Restantes =  " + countThread + ")");
+		}
+
+		System.out.println("Finalizado Processamento de Client");
+
 	}
 	
 }
